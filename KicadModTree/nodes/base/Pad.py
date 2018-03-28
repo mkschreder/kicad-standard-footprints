@@ -64,8 +64,9 @@ class Pad(Node):
     SHAPE_CIRCLE = 'circle'
     SHAPE_OVAL = 'oval'
     SHAPE_RECT = 'rect'
+    SHAPE_ROUNDED_RECT = 'roundrect'
     SHAPE_TRAPEZE = 'trapezoid'
-    _SHAPES = [SHAPE_CIRCLE, SHAPE_OVAL, SHAPE_RECT, SHAPE_TRAPEZE]
+    _SHAPES = [SHAPE_CIRCLE, SHAPE_OVAL, SHAPE_RECT, SHAPE_ROUNDED_RECT, SHAPE_TRAPEZE]
 
     LAYERS_SMT = ['F.Cu', 'F.Mask', 'F.Paste']
     LAYERS_THT = ['*.Cu', '*.Mask']
