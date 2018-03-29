@@ -110,8 +110,8 @@ class ComponentSOIC(object):
 			kicad_mod.append(Pad(number=p["PIN_COUNT"] + 1, type=Pad.TYPE_SMT, shape=Pad.SHAPE_ROUNDED_RECT, at=[0, 0], size=[p["THERMAL_PAD_WIDTH"], p["THERMAL_PAD_LENGTH"]], layers=Pad.LAYERS_SMT, solder_mask_margin=p["SOLDER_MASK_MARGIN"]));
 		# generate 3d model
 		scale = 1 / 2.54;
-		box = Part.makeBox(p["BODY_LENGTH"] * scale, p["BODY_WIDTH"] * scale, p["BODY_HEIGHT"] * scale)
-		box.translate(FreeCAD.Vector(-p["BODY_LENGTH"]/2 * scale, -p["BODY_WIDTH"]/2 * scale, 0));
+		box = Part.makeBox(p["BODY_WIDTH"] * scale, p["BODY_LENGTH"] * scale, p["BODY_HEIGHT"] * scale)
+		box.translate(FreeCAD.Vector(-p["BODY_WIDTH"]/2 * scale, -p["BODY_LENGTH"]/2 * scale, 0));
 		mesh=Mesh.Mesh()
 		mesh.addFacets(box.tessellate(0.01))
 
