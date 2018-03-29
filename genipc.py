@@ -282,8 +282,10 @@ KISYS3DMOD="packages3d/"
 
 files = [
 	"chip_resistors.csv",
-	"chip_capacitors.csv",
-	"chip_inductors.csv"
+	"molded_diodes.csv",
+	"capacitors.csv",
+	"inductors.csv",
+	"soic.csv"
 ]
 
 for dbname in files:

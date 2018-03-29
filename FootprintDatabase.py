@@ -1,6 +1,8 @@
 import csv
 import re
 from ComponentChip import *
+from ComponentMolded import *
+from ComponentSOIC import *
 
 class FootprintProperty(object):
 	def __init__(self, value):
@@ -53,5 +55,9 @@ class FootprintDatabase(object):
 				props["TYPE"] = re.split("([A-Z]+)", props["NAME"])[1];
 				if props["TYPE"] in ["RESC", "CAPC", "DIOC", "LEDC"]:
 					fp = ComponentChip(props);	
+				elif props["TYPE"] in ["CAPM", "CAPMP", "DIOM", "INDM"]:
+					fp = ComponentMolded(props);
+				elif props["TYPE"] in ["SOIC"]:
+					fp = ComponentSOIC(props);
 
 				self.footprints.append(fp)

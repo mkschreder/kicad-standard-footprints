@@ -2,6 +2,7 @@ from KicadModTree import *
 import re
 import os
 import sys
+
 sys.path.insert(0, "/usr/lib/freecad/lib/")
 import FreeCAD
 import FreeCADGui
@@ -73,9 +74,9 @@ class ComponentChip(object):
 		ILString = str(IL).rjust(2, '0')+str(IW).rjust(2, '0');
 		kicad_mod = Footprint(p["NAME"]);
 
-		if p["TYPE"] == "RESC":
-			kicad_mod.setDescription("Surface Mount Chip Resistor, 2 Pins, "+ILString+", "+str(p["BODY_LENGTH"])+"mm X "+str(p["BODY_WIDTH"])+"mm")
-		elif p["TYPE"] == "CAPC":
+		if p["TYPE"] == "CAPC":
+			kicad_mod.setDescription("Surface Mount Chip Capacitor, 2 Pins, "+ILString+", "+str(p["BODY_LENGTH"])+"mm X "+str(p["BODY_WIDTH"])+"mm")
+		elif p["TYPE"] == "DIOC":
 			kicad_mod.setDescription("Surface Mount Chip Capacitor, 2 Pins, "+ILString+", "+str(p["BODY_LENGTH"])+"mm X "+str(p["BODY_WIDTH"])+"mm")
 		elif p["TYPE"] == "INDC":
 			kicad_mod.setDescription("Surface Mount Chip Inductor, 2 Pins, "+ILString+", "+str(p["BODY_LENGTH"])+"mm X "+str(p["BODY_WIDTH"])+"mm")
@@ -83,8 +84,8 @@ class ComponentChip(object):
 		kicad_mod.setTags(ILString + " " +str(int(p["BODY_LENGTH"]*10)).rjust(2, '0')+str(int(p["BODY_WIDTH"]*10)).rjust(2, '0'))
 
 		# set general values
-		kicad_mod.append(Text(type='reference', text='REF**', at=[0, -p["COURTYARD_WIDTH"] - 1], layer='F.SilkS'))
-		kicad_mod.append(Text(type='value', text=p["NAME"], at=[0, p["COURTYARD_WIDTH"] + 1], layer='F.Fab'))
+		kicad_mod.append(Text(type='reference', text='REF**', at=[0, -p["COURTYARD_WIDTH"]/2 - 1], layer='F.SilkS'))
+		kicad_mod.append(Text(type='value', text=p["NAME"], at=[0, p["COURTYARD_WIDTH"]/2 + 1], layer='F.Fab'))
 
 		# create fabrication layer
 		kicad_mod.append(RectLine(start=[-p["BODY_LENGTH"]/2, -p["BODY_WIDTH"]/2], end=[p["BODY_LENGTH"]/2, p["BODY_WIDTH"]/2], layer='F.Fab'))
