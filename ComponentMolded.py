@@ -14,12 +14,21 @@ from FootprintDatabase import *
 from Component import *
 
 class ComponentMolded(object):
+	def prop_or_default(self, name, default):
+		print(name + ": " + str(self.props))
+		if name in self.props:
+			print(self.props[name]);
+		if name in self.props and self.props[name] is not None:
+			return self.props[name];
+		return default
 	def __init__(self, props):
 		p = self.props = props.copy();
 		if not p["TYPE"] in ["CAPM", "CAPMP", "DIOM", "INDM"]:
 			raise BaseException("Molded component generator can only be used on molded components (Resistors, Capacitors and Inductors): "+p["NAME"])
 
 		parts = re.split("([A-Z]+)(\d+)X(\d+)([LMN])", p["NAME"])
+		print("Parsing: "+p["NAME"]);
+
 		size = parts[2];
 		size_x = size[:len(size)/2];
 		size_y = size[len(size)/2:];
@@ -27,7 +36,7 @@ class ComponentMolded(object):
 		p["BODY_LENGTH"] = float(size_x)/10
 		p["BODY_WIDTH"] = float(size_y)/10
 		p["BODY_HEIGHT"] = float(parts[3])/10
-		density = parts[5] or "N"
+		density = parts[4] or "N"
 		if density == "L":
 			p["COURTYARD"] = 0.1;
 		if density == "N":
@@ -40,10 +49,11 @@ class ComponentMolded(object):
 
 		# these need to be revised!
 		p["BODY_PAD_LENGTH"] = p["BODY_LENGTH"] * 0.25;
-		p["BODY_PAD_WIDTH"] = p["BODY_WIDTH"] * 0.5;
+		p["BODY_PAD_WIDTH"] = self.prop_or_default("BODY_PAD_WIDTH", p["BODY_WIDTH"] * 0.5);
+		p["BODY_PAD_WIDTH"] = self.prop_or_default("BODY_PAD_WIDTH", p["BODY_WIDTH"] * 0.5);
 
 		p["PAD_LENGTH"] = p["BODY_PAD_LENGTH"] * 1.4;
-		p["PAD_WIDTH"] = p["BODY_PAD_WIDTH"] * 1.1;
+		p["PAD_WIDTH"] = self.prop_or_default("PAD_WIDTH", p["BODY_PAD_WIDTH"] * 1.1);
 
 		# by default we make the body end in the middle of the pad so pad distance is body length
 		p["PAD_DISTANCE"] = p["BODY_LENGTH"];
@@ -51,12 +61,10 @@ class ComponentMolded(object):
 		# courtyard needs to be calculated based on maximum of pad size and body size
 		p["COURTYARD_LENGTH"] = max(p["PAD_DISTANCE"] + p["PAD_LENGTH"], p["BODY_LENGTH"]) + p["COURTYARD"] * 2;
 		p["COURTYARD_WIDTH"] = max(p["PAD_WIDTH"], p["BODY_WIDTH"]) + p["COURTYARD"] * 2;
-
-		# silkscreen for resistor consists of two parallel lines drawn in the middle
-		# width is the distance between the lines and length is the length of the lines
-		p["SILKSCREEN_WIDTH"] = max(p["PAD_WIDTH"], p["BODY_WIDTH"]) + 0.2;
+		
+		p["SILKSCREEN_WIDTH"] = p["BODY_WIDTH"] + 0.2;
 		# ensure some distance from the pads themselves
-		p["SILKSCREEN_LENGTH"] = max(p["PAD_DISTANCE"] + p["PAD_LENGTH"], p["BODY_LENGTH"]) + 0.2;
+		p["SILKSCREEN_LENGTH"] = p["BODY_LENGTH"] + 0.2;
 
 		# solder mask margin is just constant for now
 		p["SOLDER_MASK_MARGIN"] = 0.05;
@@ -65,6 +73,8 @@ class ComponentMolded(object):
 
 	def generate(self):
 		p = self.props;
+
+		print("Generating: "+p["NAME"])
 
 		IL = int(10 * p["BODY_LENGTH_IN"]);
 		IW = int(10 * p["BODY_LENGTH_IN"]);

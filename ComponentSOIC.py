@@ -74,7 +74,7 @@ class ComponentSOIC(object):
 		p["SILKSCREEN_LENGTH"] = p["BODY_LENGTH"];
 
 
-		p["SOLDER_MASK_MARGIN"] = 0.07;
+		p["SOLDER_MASK_MARGIN"] = p["SOLDER_MASK_MARGIN"] or 0.07;
 
 		self.generate();
 
@@ -104,6 +104,10 @@ class ComponentSOIC(object):
 			pin_y = -pin_start_y + pn * p["PITCH"];
 			kicad_mod.append(Pad(number=pn + 1, type=Pad.TYPE_SMT, shape=Pad.SHAPE_ROUNDED_RECT, at=[-p["PAD_DISTANCE"]/2, pin_y], size=[p["PAD_LENGTH"], p["PAD_WIDTH"]], layers=Pad.LAYERS_SMT, solder_mask_margin=p["SOLDER_MASK_MARGIN"]));
 			kicad_mod.append(Pad(number=p["PIN_COUNT"] - pn, type=Pad.TYPE_SMT, shape=Pad.SHAPE_ROUNDED_RECT, at=[p["PAD_DISTANCE"]/2, pin_y], size=[p["PAD_LENGTH"], p["PAD_WIDTH"]], layers=Pad.LAYERS_SMT, solder_mask_margin=p["SOLDER_MASK_MARGIN"]));
+
+		# create first pin mark
+		start_x = -p["PAD_DISTANCE"]/2 - p["PAD_LENGTH"] / 2;
+		kicad_mod.append(Line(start=[start_x, -p["BODY_LENGTH"] / 2], end=[start_x + p["PAD_LENGTH"], -p["BODY_LENGTH"]/2], layer='F.SilkS'))
 
 		# create thermal pad
 		if p["THERMAL_PAD"]: 

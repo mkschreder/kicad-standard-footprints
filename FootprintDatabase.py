@@ -50,7 +50,16 @@ class FootprintDatabase(object):
 					continue
 				
 				for i in range(0, len(row)):
-					props[name_row[i]] = row[i];
+					try:
+						props[name_row[i]] = int(row[i]);
+					except:
+						try:
+							props[name_row[i]] = float(row[i]);
+						except:
+							if not row[i] == "":
+								props[name_row[i]] = row[i];
+							else:
+								props[name_row[i]] = None;
 
 				props["TYPE"] = re.split("([A-Z]+)", props["NAME"])[1];
 				if props["TYPE"] in ["RESC", "CAPC", "DIOC", "LEDC"]:
